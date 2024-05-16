@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Tanahore</string>
     <string name="imgDesc">image</string>
+    <string name="welcometext">Welcome To Tanahore</string>
+    <string name="checkboxtext">Don\'t Show This Page Again</string>
+    <string name="btnwelcome">Continue</string>
+    <string name="nama_tanah">Nama Tanah</string>
+    <string name="search_here">Search Here</string>
 </resources>
