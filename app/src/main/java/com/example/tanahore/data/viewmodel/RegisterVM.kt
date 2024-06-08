@@ -3,12 +3,8 @@ package com.example.tanahore.data.viewmodel
 import androidx.lifecycle.ViewModel
 import com.example.tanahore.repository.UserRepository
 
-class IotVM (
+class RegisterVM (
     private val repository: UserRepository
-    ) : ViewModel() {
-    fun postPh(
-        jenisTanah: String,
-        id: String,
-        token: String
-    ) = repository.postPh(jenisTanah, id, token)
+) : ViewModel(){
+    fun register(name: String, email: String, pass: String) = repository.register(name, email, pass)
 }

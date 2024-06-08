@@ -21,6 +21,7 @@ import com.example.tanahore.data.viewmodel.CameraVM
 import com.example.tanahore.data.viewmodel.FactoryVM
 import com.example.tanahore.data.viewmodel.IotVM
 import com.example.tanahore.databinding.ActivitySelectBinding
+import com.example.tanahore.preference.UserManager
 import com.example.tanahore.utils.reduceFileImage
 import com.example.tanahore.utils.rotateBitmap
 import com.example.tanahore.utils.showToast
@@ -33,6 +34,7 @@ import java.io.File
 class SelectActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySelectBinding
     private lateinit var factory: FactoryVM
+    private lateinit var preference: UserManager
     private val viewModel: CameraVM by viewModels {
         factory
     }
@@ -45,6 +47,7 @@ class SelectActivity : AppCompatActivity() {
         binding = ActivitySelectBinding.inflate(layoutInflater)
         setContentView(binding.root)
         factory = FactoryVM.getInstance(this)
+        preference = UserManager(this)
         binding.cardView.visibility = View.GONE
         binding.tvRegister.visibility = View.GONE
         binding.btnPh.visibility = View.GONE
@@ -104,26 +107,29 @@ class SelectActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun iot(jenisTanah: String) {
         Log.d("iot", "masuk")
-        viewModel2.postPh("DT11", jenisTanah).observe(this) { response ->
-            when (response) {
-                is Results.Success -> {
-                    Log.d("iot", "success")
-                    binding.cardView2.visibility = View.VISIBLE
-                    binding.pH.text = resources.getString(R.string.phtanah) + " " + response.data.data.data.ph
-                    binding.Rekomendasi.text = resources.getString(R.string.rekomendasi) + " " + response.data.data.data.plantRecommendation
-                    binding.Suhu.text = resources.getString(R.string.suhu) + " " + response.data.data.data.suhu
-                    binding.Kelembapan.text = resources.getString(R.string.kelembapan) + " " + response.data.data.data.kelembapan
-                    binding.IntensitasCahaya.text = resources.getString(R.string.intensitascahaya) + " " + response.data.data.data.intensitasCahaya
-                    binding.progressBar.visibility = View.GONE
-                }
+        preference.getToken()?.let {
+            viewModel2.postPh("DT11", jenisTanah, it).observe(this) { response ->
+                when (response) {
+                    is Results.Success -> {
+                        Log.d("iot", "success")
+                        binding.cardView2.visibility = View.VISIBLE
+                        binding.pH.text = resources.getString(R.string.phtanah) + " " + response.data.data.data.ph
+                        binding.Rekomendasi.text = resources.getString(R.string.rekomendasi) + " " + response.data.data.data.plantRecommendation
+                        binding.Suhu.text = resources.getString(R.string.suhu) + " " + response.data.data.data.suhu
+                        binding.Kelembapan.text = resources.getString(R.string.kelembapan) + " " + response.data.data.data.kelembapan
+                        binding.IntensitasCahaya.text = resources.getString(R.string.intensitascahaya) + " " + response.data.data.data.intensitasCahaya
+                        binding.progressBar.visibility = View.GONE
+                        binding.btnPh.visibility = View.GONE
+                    }
 
-                is Results.Error -> {
-                    Log.d("iot", "error")
-                    showToast(response.error)
-                }
+                    is Results.Error -> {
+                        Log.d("iot", "error")
+                        showToast(response.error)
+                    }
 
-                is Results.Loading -> {
-                    binding.progressBar.visibility = View.VISIBLE
+                    is Results.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
                 }
             }
         }
@@ -140,25 +146,29 @@ class SelectActivity : AppCompatActivity() {
             requestImageFile
         )
 
-        viewModel.postImage(imageMultipart).observe(this) { response ->
-            when (response) {
-                is Results.Success -> {
-//                    val name = response.data.data.contact.name
-//                    Log.d("ScanResponse", "Success: $name")
-                    binding.txtJenisTanah.text = resources.getString(R.string.jenis_tanah) + " " + response.data.data.predictedsoil
-                    binding.txtTanaman.text = resources.getString(R.string.tanaman) + " " + response.data.data.plantrecommendations
-//                    binding.txtDesc.text = response.data.data.information.description
-                    binding.progressBar.visibility = View.GONE
-                    binding.btnPh.visibility = View.VISIBLE
-                    binding.btnPh.setOnClickListener {
-                        iot(response.data.data.predictedsoil)
+        preference.getToken()?.let {
+            viewModel.postImage(imageMultipart, it).observe(this) { response ->
+                when (response) {
+                    is Results.Success -> {
+    //                    val name = response.data.data.contact.name
+    //                    Log.d("ScanResponse", "Success: $name")
+                        binding.txtJenisTanah.text = resources.getString(R.string.jenis_tanah) + " " + response.data.data.predictedsoil
+                        binding.txtTanaman.text = resources.getString(R.string.tanaman) + " " + response.data.data.plantrecommendations
+    //                    binding.txtDesc.text = response.data.data.information.description
+                        binding.progressBar.visibility = View.GONE
+                        binding.btnPh.visibility = View.VISIBLE
+                        binding.btnPh.setOnClickListener {
+                            iot(response.data.data.predictedsoil)
+                        }
                     }
-                }
-                is Results.Error -> {
-                    showToast(response.error)
-                }
-                is Results.Loading -> {
-                    binding.progressBar.visibility = View.VISIBLE
+
+                    is Results.Error -> {
+                        showToast(response.error)
+                    }
+
+                    is Results.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
                 }
             }
         }

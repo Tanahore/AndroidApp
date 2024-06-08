@@ -50,7 +50,7 @@ class WelcomeActivity : AppCompatActivity() {
 
     private fun setupAction(){
         binding.button.setOnClickListener{
-            startActivity(Intent(this, SelectActivity::class.java))
+            startActivity(Intent(this, MainActivity::class.java))
         }
     }
 }
