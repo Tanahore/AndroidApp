@@ -6,4 +6,16 @@
     <string name="btnwelcome">Continue</string>
     <string name="nama_tanah">Nama Tanah</string>
     <string name="search_here">Search Here</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="scanresult">Result</string>
+    <string name="jenis_tanah">Jenis Tanah:</string>
+    <string name="deskripsi">deskripsi:</string>
+    <string name="tanaman">tanaman:</string>
+    <string name="ph">Cek pH</string>
+    <string name="phtanah">PH Tanah:</string>
+    <string name="rekomendasi">Rekomendasi:</string>
+    <string name="suhu">Suhu:</string>
+    <string name="kelembapan">Kelembapan:</string>
+    <string name="intensitascahaya">Intensitas Cahaya:</string>
 </resources>

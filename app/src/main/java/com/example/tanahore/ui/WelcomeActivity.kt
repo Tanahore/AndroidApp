@@ -1,5 +1,6 @@
 package com.example.tanahore.ui
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -30,7 +31,7 @@ class WelcomeActivity : AppCompatActivity() {
                 }
             }
         }
-
+        setupAction()
         setupView()
     }
 
@@ -45,5 +46,11 @@ class WelcomeActivity : AppCompatActivity() {
             )
         }
         supportActionBar?.hide()
+    }
+
+    private fun setupAction(){
+        binding.button.setOnClickListener{
+            startActivity(Intent(this, SelectActivity::class.java))
+        }
     }
 }
