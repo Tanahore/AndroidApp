@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.tanahore.injection.Data
-import com.example.tanahore.repository.CameraRepository
+import com.example.tanahore.repository.UserRepository
 
 class FactoryVM (
-    private val repository: CameraRepository
+    private val repository: UserRepository
 ) : ViewModelProvider.NewInstanceFactory(){
 
     @Suppress("UNCHECKED_CAST")
@@ -18,6 +18,12 @@ class FactoryVM (
             }
             modelClass.isAssignableFrom(IotVM::class.java) -> {
                 IotVM(repository) as T
+            }
+            modelClass.isAssignableFrom(RegisterVM::class.java) -> {
+                RegisterVM(repository) as T
+            }
+            modelClass.isAssignableFrom(LoginVM::class.java) -> {
+                LoginVM(repository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }

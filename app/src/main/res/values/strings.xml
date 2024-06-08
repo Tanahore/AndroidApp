@@ -18,4 +18,16 @@
     <string name="suhu">Suhu:</string>
     <string name="kelembapan">Kelembapan:</string>
     <string name="intensitascahaya">Intensitas Cahaya:</string>
+    <string name="password">Input Your Password</string>
+    <string name="login">LOGIN</string>
+    <string name="email">Input Your Email</string>
+    <string name="for_register">Don\'t Have Account?</string>
+    <string name="clickhere">Click Here</string>
+    <string name="signin">Sign In</string>
+    <string name="signup">Sign Up</string>
+    <string name="register">REGISTER</string>
+    <string name="inpusername">Input Your Username</string>
+    <string name="for_login">Already Have Account?</string>
+    <string name="logout">LOGOUT</string>
+    <string name="logout2">Are You Sure Want To Logout?</string>
 </resources>
