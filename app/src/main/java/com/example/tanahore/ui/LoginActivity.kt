@@ -86,6 +86,9 @@ class LoginActivity : AppCompatActivity() {
                         binding.progressBar.visibility = View.GONE
                         val data = response.data
                         preferences.setToken(data.data.accessToken)
+                        preferences.setTokenCreated(System.currentTimeMillis())
+                        preferences.setEmail(email)
+                        preferences.setPassword(password)
                         val intent = Intent(this@LoginActivity, MainActivity::class.java)
                         intent.putExtra(MainActivity.EXTRA_DATA, data.data.accessToken)
                         startActivity(intent)
