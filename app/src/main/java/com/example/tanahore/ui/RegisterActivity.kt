@@ -85,6 +85,7 @@ class RegisterActivity : AppCompatActivity() {
                     binding.progressBar.visibility = View.GONE
                     val data = response.data
                     preferences.setToken(data.data.accessToken)
+                    preferences.setTokenCreated(System.currentTimeMillis())
                     val intent = Intent(this@RegisterActivity, MainActivity::class.java)
                     intent.putExtra(MainActivity.EXTRA_DATA, data.data.accessToken)
                     startActivity(intent)
