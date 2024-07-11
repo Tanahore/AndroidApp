@@ -1,12 +1,12 @@
 package com.example.tanahore.data.retrofit
 
-import androidx.lifecycle.LiveData
 import com.example.tanahore.data.response.ArticleResponse
 import com.example.tanahore.data.response.DetailArticleResponse
 import com.example.tanahore.data.response.IotResponse
 import com.example.tanahore.data.response.LoginResponse
 import com.example.tanahore.data.response.RegisterResponse
 import com.example.tanahore.data.response.ScanResponse
+import com.example.tanahore.data.response.SearchResponse
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.Field
@@ -19,19 +19,19 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface ServiceApi {
-    @GET("/mobile/api/articles/search/{title}")
+    @GET("/mobile/api/articles/search/{query}")
     fun searchArticles(
-        @Path("title") title: String,
-    ): Call<ArticleResponse>
+        @Path("query") query: String,
+    ): Call<SearchResponse>
 
     @GET("/mobile/api/articles/{id}")
     fun getDetail(
         @Path("id") id: Int
     ): Call<DetailArticleResponse>
 
-    @GET("/")
+    @GET("/mobile/api/articles")
     fun home(
-    ): Call<DetailArticleResponse>
+    ): Call<ArticleResponse>
 
     @Multipart
     @POST("/mobile/api/predict/soil")

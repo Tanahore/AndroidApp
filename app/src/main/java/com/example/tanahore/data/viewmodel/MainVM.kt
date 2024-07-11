@@ -4,45 +4,76 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.tanahore.data.response.DataArticle
-import com.example.tanahore.data.response.DetailArticleResponse
+import com.example.tanahore.data.response.ArticleResponse
+import com.example.tanahore.data.response.ArticlesItem
+import com.example.tanahore.data.response.DataItem
+import com.example.tanahore.data.response.SearchResponse
 import com.example.tanahore.data.retrofit.ConfigApi
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class MainVM: ViewModel() {
-    private val _detail = MutableLiveData<DataArticle>()
-    val detail: LiveData<DataArticle> = _detail
+    private val _dataItem = MutableLiveData<List<DataItem>>()
+    val dataItem: LiveData<List<DataItem>> = _dataItem
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    fun articleDetail(){
+
+    private val _articlesItem = MutableLiveData<List<ArticlesItem>>()
+    val articlesItem: LiveData<List<ArticlesItem>> = _articlesItem
+
+    fun getAllArticles() {
         _isLoading.value = true
         val client = ConfigApi.getApiService().home()
-        client.enqueue(object : Callback<DetailArticleResponse> {
-            override fun onResponse(call: Call<DetailArticleResponse>, response: Response<DetailArticleResponse>) {
+        client.enqueue(object : Callback<ArticleResponse> {
+            override fun onResponse(call: Call<ArticleResponse>, response: Response<ArticleResponse>) {
                 _isLoading.value = false
 
-                if(response.isSuccessful){
+                if (response.isSuccessful) {
                     val responseBody = response.body()
-                    if(responseBody != null){
-                        _detail.value = responseBody.data
+                    if (responseBody != null) {
+                        _dataItem.value = responseBody.data
                     }
-                } else{
+                } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
                 }
             }
 
-            override fun onFailure(call: Call<DetailArticleResponse>, t: Throwable) {
+            override fun onFailure(call: Call<ArticleResponse>, t: Throwable) {
                 _isLoading.value = false
                 Log.e(TAG, "onFailure: ${t.message}")
             }
         })
     }
 
-    companion object{
-        private const val TAG = "DetailViewModel"
+    fun searchArticle(query: String) {
+        _isLoading.value = true
+        val client = ConfigApi.getApiService().searchArticles(query)
+        client.enqueue(object : Callback<SearchResponse> {
+            override fun onResponse(call: Call<SearchResponse>, response: Response<SearchResponse>) {
+                _isLoading.value = false
+
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        _articlesItem.value = responseBody.data.articles
+                        Log.d("MainVM", "dataItem changed: ${_articlesItem.value}")
+                    }
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
+                _isLoading.value = false
+                Log.e(TAG, "onFailure: ${t.message}")
+            }
+        })
+    }
+
+    companion object {
+        private const val TAG = "MainViewModel"
     }
 }

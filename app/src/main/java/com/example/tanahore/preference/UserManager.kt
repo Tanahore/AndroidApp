@@ -17,24 +17,20 @@ class UserManager (context: Context) {
         preferences.edit().putLong(TOKEN_CREATED, tokenCreated).apply()
     }
 
-    fun getTokenCreated(): Long {
-        return preferences.getLong(TOKEN_CREATED, 0)
-    }
-
     fun setEmail(email : String?) {
         preferences.edit().putString(EMAIL, email).apply()
-    }
-
-    fun getEmail(): String? {
-        return preferences.getString(EMAIL, null)
     }
 
     fun setPassword(password : String) {
         preferences.edit().putString(PASSWORD, password).apply()
     }
 
-    fun getPassword(): String? {
-        return preferences.getString(PASSWORD, null)
+    fun setWelcome(isWelcome: Boolean) {
+        preferences.edit().putBoolean("isWelcome", isWelcome).apply()
+    }
+
+    fun getWelcome(): Boolean {
+        return preferences.getBoolean("isWelcome", false)
     }
 
     companion object {

@@ -18,9 +18,9 @@ object ConfigApi {
 
         val client = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
-            .connectTimeout(30, TimeUnit.SECONDS)  // Set connection timeout
-            .readTimeout(30, TimeUnit.SECONDS)     // Set read timeout
-            .writeTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(500, TimeUnit.SECONDS)
+            .readTimeout(500, TimeUnit.SECONDS)
+            .writeTimeout(500, TimeUnit.SECONDS)
             .build()
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)

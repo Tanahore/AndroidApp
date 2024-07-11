@@ -15,7 +15,7 @@ data class DataIot(
 
 data class DataIot2(
     @SerializedName("plantRecommendation") val plantRecommendation: String,
-    @SerializedName("suhu") val suhu: Int,
+    @SerializedName("suhu") val suhu: Float,
     @SerializedName("kelembapan") val kelembapan: Int,
     @SerializedName("intensitasCahaya") val intensitasCahaya: Int,
     @SerializedName("ph") val ph: Float

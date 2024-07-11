@@ -5,11 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import com.bumptech.glide.Glide
-import com.example.tanahore.data.viewmodel.MainVM
 import com.example.tanahore.databinding.ActivitySplashScreenBinding
 
 @SuppressLint("CustomSplashScreen")

@@ -22,7 +22,6 @@ class TxtEmail : AppCompatEditText {
     }
 
     private fun init() {
-        // Tambahkan TextWatcher untuk memvalidasi email saat menginput
         addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             }
