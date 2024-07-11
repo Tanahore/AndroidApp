@@ -38,18 +38,6 @@
         android:contentDescription="@string/imgDesc"/>
 
     <ImageView
-        android:id="@+id/switch_camera"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/capture_image"
-        app:layout_constraintTop_toTopOf="@+id/capture_image"
-        app:srcCompat="@drawable/baseline_switch_24"
-        android:contentDescription="@string/imgDesc"/>
-
-    <ImageView
         android:id="@+id/exit"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -60,4 +48,16 @@
         app:layout_constraintTop_toTopOf="@+id/capture_image"
         app:srcCompat="@drawable/baseline_close_24"
         android:contentDescription="@string/imgDesc"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

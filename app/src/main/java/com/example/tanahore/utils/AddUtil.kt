@@ -2,20 +2,14 @@ package com.example.tanahore.utils
 
 import android.app.Activity
 import android.app.Application
-import android.content.ContentResolver
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
-import android.net.Uri
-import android.os.Environment
 import android.widget.Toast
 import com.example.tanahore.R
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
-import java.io.InputStream
-import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -25,11 +19,6 @@ val timeStamp: String = SimpleDateFormat(
     FILENAME_FORMAT,
     Locale.US
 ).format(System.currentTimeMillis())
-
-fun createTempFile(context: Context): File {
-    val storageDir: File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-    return File.createTempFile(timeStamp, ".jpg", storageDir)
-}
 
 fun createFile(application: Application): File {
     val mediaDir = application.externalMediaDirs.firstOrNull()?.let {
@@ -43,10 +32,8 @@ fun createFile(application: Application): File {
 
 fun rotateBitmap(bitmap: Bitmap, isBackCamera: Boolean = false): Bitmap {
     val matrix = Matrix()
-    val degrees = if (isBackCamera) 90f else -90f
+    val degrees = if (isBackCamera) -90f else 90f
     matrix.postRotate(degrees)
-    if (!isBackCamera) matrix.postScale(-1f, 1f, bitmap.width / 2f, bitmap.height / 2f)
-//    return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     val newBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     return makeSquare(newBitmap)
 }
@@ -64,21 +51,6 @@ fun makeSquare(originalBitmap: Bitmap): Bitmap {
     val sizeWidth = width - (cropWidth * 2)
 
     return Bitmap.createBitmap(originalBitmap, x, y, sizeWidth, sizeWidth)
-}
-
-fun uriToFile(selectedImg: Uri, context: Context): File {
-    val contentResolver: ContentResolver = context.contentResolver
-    val myFile = createTempFile(context)
-
-    val inputStream = contentResolver.openInputStream(selectedImg) as InputStream
-    val outputStream: OutputStream = FileOutputStream(myFile)
-    val buf = ByteArray(1024)
-    var len: Int
-    while (inputStream.read(buf).also { len = it } > 0) outputStream.write(buf, 0, len)
-    outputStream.close()
-    inputStream.close()
-
-    return myFile
 }
 
 fun reduceFileImage(file: File): File {

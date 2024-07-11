@@ -1,46 +1,99 @@
 package com.example.tanahore.ui
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tanahore.R
-import com.example.tanahore.controller.Users
+import com.example.tanahore.adapter.ArticleAdapter
 import com.example.tanahore.data.viewmodel.FactoryVM
-import com.example.tanahore.data.viewmodel.LoginVM
+import com.example.tanahore.data.viewmodel.MainVM
 import com.example.tanahore.databinding.ActivityMainBinding
 import com.example.tanahore.preference.UserManager
-import kotlinx.coroutines.launch
-import java.util.Date
 
 class MainActivity : AppCompatActivity() {
     private var doubleBackToExitPressedOnce = false
     private lateinit var binding: ActivityMainBinding
+    private lateinit var mainViewModel: MainVM
     private lateinit var preferences: UserManager
     private lateinit var factory: FactoryVM
-    private val loginViewModel: LoginVM by viewModels {
-        factory
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        factory = FactoryVM.getInstance(this)
+        binding.rvTanahore.layoutManager = LinearLayoutManager(this)
         setContentView(binding.root)
+        mainViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[MainVM::class.java]
+        mainViewModel.getAllArticles()
+        mainViewModel.dataItem.observe(this) { dataItem ->
+            setData(dataItem)
+            Log.d("MainActivity", "setData called with data: $dataItem")
+        }
+
+        mainViewModel.articlesItem.observe(this) { articlesItem ->
+            setData(articlesItem)
+            Log.d("MainActivity", "setData called with data: $articlesItem")
+        }
+        mainViewModel.isLoading.observe(this) { isLoading ->
+            if (isLoading) {
+                binding.progressBar.visibility = View.VISIBLE
+            } else {
+                binding.progressBar.visibility = View.GONE
+            }
+        }
+        try {
+            with(binding){
+                searchView.setupWithSearchBar(searchBar)
+                searchView
+                    .editText
+                    .setOnEditorActionListener{ textView, _, _ ->
+                        searchView.hide()
+                        val query= textView.text.toString()
+                        if (query.isNotEmpty()){
+                            mainViewModel.searchArticle(query)
+                            binding.searchBar.setText(query)
+                        } else{
+                            Toast.makeText(this@MainActivity, "Cannot be Empty", Toast.LENGTH_SHORT).show()
+                        }
+                        false
+                    }
+            }
+        } catch (e: Error) {
+            Log.d("catch error", e.toString())
+            Toast.makeText(this@MainActivity, "Error : $e", Toast.LENGTH_SHORT).show()
+        }
         preferences = UserManager(this)
         if (preferences.getToken() == null) {
             binding.logout.visibility = View.GONE
         }else{
             binding.logout.visibility = View.VISIBLE
         }
-        lifecycleScope.launch {
-            isExpired()
-        }
         setAction()
+
+        if (!permissionGranted()) {
+            ActivityCompat.requestPermissions(
+                this,
+                REQUIRED_PERMISSIONS,
+                REQUEST_CODE_PERMISSIONS
+            )
+        }
     }
+
+    private fun permissionGranted() = REQUIRED_PERMISSIONS.all {
+        ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
+    }
+
 
     private fun setAction(){
         binding.fabCamera.setOnClickListener {
@@ -48,26 +101,34 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
             }else {
-                startActivity(Intent(this, SelectActivity::class.java))
+                startCameraX()
             }
         }
         binding.logout.setOnClickListener {
             dialogLogout()
         }
     }
-
-    private suspend fun isExpired() {
-        val user = Users()
-        val timeDiff = System.currentTimeMillis() - preferences.getTokenCreated()
-        val millisHours = 3600000 * 23
-        if(timeDiff > millisHours){
-            val loggedIn = user.automatedLogin(this, loginViewModel, preferences.getEmail()!!, preferences.getPassword()!!)
-            if (loggedIn) {
-                Toast.makeText(this, "relogin Success", Toast.LENGTH_SHORT).show()
-            }else{
-                Toast.makeText(this, "please relogin to access some features", Toast.LENGTH_SHORT).show()
-            }
+    private fun startCameraX() {
+        ActivityCompat.requestPermissions(
+            this,
+            REQUIRED_PERMISSIONS,
+            REQUEST_CODE_PERMISSIONS
+        )
+        if (permissionGranted()) {
+            startActivity(Intent(this, CameraActivity::class.java))
+        } else {
+            startActivity(Intent(this, MainActivity::class.java))
         }
+    }
+
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun setData(data: List<Any>){
+        val adapter = ArticleAdapter().apply {
+            submitList(data)
+            notifyDataSetChanged()
+        }
+        binding.rvTanahore.adapter = adapter
     }
 
     private fun dialogLogout() {
@@ -77,6 +138,7 @@ class MainActivity : AppCompatActivity() {
             setCancelable(false)
             setPositiveButton("YES") { _, _ ->
                 preferences.setToken(null)
+                preferences.setWelcome(false)
                 startActivity(Intent(this@MainActivity, MainActivity::class.java))
                 binding.logout.visibility = View.GONE
                 finish()
@@ -102,5 +164,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_DATA = "extra_data"
+        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+        private const val REQUEST_CODE_PERMISSIONS = 100
     }
 }
