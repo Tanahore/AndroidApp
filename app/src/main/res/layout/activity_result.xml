@@ -146,15 +146,6 @@
                         android:text="@string/phtanah"
                         android:textSize="16sp" />
                     <TextView
-                        android:id="@+id/Suhu"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppinregular"
-                        android:layout_marginBottom="10dp"
-                        android:textColor="@color/black"
-                        android:text="@string/suhu"
-                        android:textSize="16sp" />
-                    <TextView
                         android:id="@+id/Kelembapan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -174,7 +165,6 @@
                         android:maxLines="1"
                         android:text="@string/intensitascahaya"
                         android:textSize="16sp" />
-
                     <TextView
                         android:id="@+id/Rekomendasi"
                         android:layout_width="match_parent"

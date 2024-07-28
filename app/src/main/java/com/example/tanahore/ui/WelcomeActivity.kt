@@ -45,6 +45,7 @@ class WelcomeActivity : AppCompatActivity() {
     private fun setupAction(){
         binding.button.setOnClickListener{
             startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
     private fun setupCheckbox() {

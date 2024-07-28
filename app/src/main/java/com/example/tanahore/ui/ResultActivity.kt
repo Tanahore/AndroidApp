@@ -79,7 +79,6 @@ class ResultActivity : AppCompatActivity() {
                         binding.cardView2.visibility = View.VISIBLE
                         binding.pH.text = resources.getString(R.string.phtanah) + " " + response.data.data.data.ph
                         binding.Rekomendasi.text = resources.getString(R.string.rekomendasi) + " " + response.data.data.data.plantRecommendation
-                        binding.Suhu.text = resources.getString(R.string.suhu) + " " + response.data.data.data.suhu
                         binding.Kelembapan.text = resources.getString(R.string.kelembapan) + " " + response.data.data.data.kelembapan
                         binding.IntensitasCahaya.text = resources.getString(R.string.intensitascahaya) + " " + response.data.data.data.intensitasCahaya
                         binding.progressBar.visibility = View.GONE
@@ -96,5 +95,11 @@ class ResultActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        super.onBackPressed()
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 }

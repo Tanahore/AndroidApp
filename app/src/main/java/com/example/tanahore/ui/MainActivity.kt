@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
                         searchView.hide()
                         val query= textView.text.toString()
                         if (query.isNotEmpty()){
-                            mainViewModel.searchArticle(query)
+                            mainViewModel.searchArticle(this@MainActivity, query)
                             binding.searchBar.setText(query)
                         } else{
                             Toast.makeText(this@MainActivity, "Cannot be Empty", Toast.LENGTH_SHORT).show()
@@ -116,6 +116,7 @@ class MainActivity : AppCompatActivity() {
         )
         if (permissionGranted()) {
             startActivity(Intent(this, CameraActivity::class.java))
+            finish()
         } else {
             startActivity(Intent(this, MainActivity::class.java))
         }
@@ -141,7 +142,6 @@ class MainActivity : AppCompatActivity() {
                 preferences.setWelcome(false)
                 startActivity(Intent(this@MainActivity, MainActivity::class.java))
                 binding.logout.visibility = View.GONE
-                finish()
             }
             setNegativeButton("NO") { dialog, _ ->
                 dialog.dismiss()

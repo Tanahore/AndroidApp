@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.tanahore.R
@@ -88,9 +89,11 @@ class LoginActivity : AppCompatActivity() {
                         val intent = Intent(this@LoginActivity, MainActivity::class.java)
                         intent.putExtra(MainActivity.EXTRA_DATA, data.data.accessToken)
                         startActivity(intent)
+                        finish()
                     }
                     is Results.Error -> {
                         binding.progressBar.visibility = View.GONE
+                        Toast.makeText(this, "Email or Password is Incorrect", Toast.LENGTH_SHORT).show()
                     }
                 }
             }

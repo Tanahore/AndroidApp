@@ -1,6 +1,8 @@
 package com.example.tanahore.data.viewmodel
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -48,7 +50,7 @@ class MainVM: ViewModel() {
         })
     }
 
-    fun searchArticle(query: String) {
+    fun searchArticle(context: Context, query: String) {
         _isLoading.value = true
         val client = ConfigApi.getApiService().searchArticles(query)
         client.enqueue(object : Callback<SearchResponse> {
@@ -62,6 +64,7 @@ class MainVM: ViewModel() {
                         Log.d("MainVM", "dataItem changed: ${_articlesItem.value}")
                     }
                 } else {
+                    Toast.makeText(context, "Article Not Found", Toast.LENGTH_SHORT).show()
                     Log.e(TAG, "onFailure: ${response.message()}")
                 }
             }

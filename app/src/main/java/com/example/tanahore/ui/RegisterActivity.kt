@@ -42,7 +42,6 @@ class RegisterActivity : AppCompatActivity() {
     private fun setAction() {
         binding.txtSignup.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
-            finish()
         }
 
         binding.btnRegister.setOnClickListener {
@@ -89,6 +88,7 @@ class RegisterActivity : AppCompatActivity() {
                     val intent = Intent(this@RegisterActivity, MainActivity::class.java)
                     intent.putExtra(MainActivity.EXTRA_DATA, data.data.accessToken)
                     startActivity(intent)
+                    finish()
                 }
                 is Results.Error -> {
                     binding.progressBar.visibility = View.GONE
